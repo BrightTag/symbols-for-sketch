@@ -4,11 +4,11 @@ var sketch = require("gulp-sketch");
 var iconfont = require('gulp-iconfont');
 var consolidate = require('gulp-consolidate');
 
-var fontName = 'symbols'; // set name of your symbol font
-var template = 'fontawesome-style'; // you can also choose 'foundation-style'
+var fontName = 'icons'; // set name of your symbol font
+var template = 'brighttag-style'; // you can also choose 'foundation-style'
 
 gulp.task('symbols', function(){
-  gulp.src('symbol-font-14px.sketch') // you can also choose 'symbol-font-16px.sketch'
+  gulp.src('../icons.sketch')
     .pipe(sketch({
       export: 'artboards',
       formats: 'svg'
@@ -21,23 +21,13 @@ gulp.task('symbols', function(){
           return { name: glyph.name, codepoint: glyph.unicode[0].charCodeAt(0) }
         }),
         fontName: fontName,
-        fontPath: '../fonts/', // set path to font (from your CSS file if relative)
-        className: 's' // set class name in your CSS
+        fontPath: '/fonts/', // set path to font (from your CSS file if relative)
+        className: 'icon' // set class name in your CSS
       };
       gulp.src('templates/' + template + '.css')
         .pipe(consolidate('lodash', options))
-        .pipe(rename({ basename:fontName }))
-        .pipe(gulp.dest('dist/css/')); // set path to export your CSS
-
-      // if you don't need sample.html, remove next 4 lines
-      gulp.src('templates/' + template + '.html')
-        .pipe(consolidate('lodash', options))
-        .pipe(rename({ basename:'sample' }))
-        .pipe(gulp.dest('dist/')); // set path to export your sample HTML
+        .pipe(rename({ basename:fontName, extname:'_embed.scss' }))
+        .pipe(gulp.dest('../../ui/public/scss/')); // set path to export your CSS
     })
-    .pipe(gulp.dest('dist/fonts/')); // set path to export your fonts
-});
-
-gulp.task('watch', function(){
-  gulp.watch('*.sketch/Data', { debounceDelay: 3000 }, ['symbols']); // wait 3 sec after the last run
+    .pipe(gulp.dest('../../ui/public/fonts/')); // set path to export your fonts
 });
