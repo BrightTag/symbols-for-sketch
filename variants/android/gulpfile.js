@@ -10,13 +10,7 @@ const
  */
 const
   // set name of your symbol font
-  fontName = 'icons',
-  // set class name in your CSS
-  className = 's',
-  // you can also choose 'foundation-style'
-  template = 'brighttag-style',
-  // you can also choose 'symbol-font-16px.sketch'
-  skethcFileName = '../icons.sketch'
+  fontName = 'symbols'
 
 /**
  * Recommended to get consistent builds when watching files
@@ -25,33 +19,29 @@ const
 const timestamp = Math.round(Date.now() / 1000)
 
 gulp.task('symbols', () =>
-  gulp.src(skethcFileName)
+  gulp.src('symbol-android-16px.sketch')
     .pipe(sketch({
       export: 'artboards',
       formats: 'svg'
     }))
     .pipe(iconfont({
       fontName,
-      formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
+      formats: ['ttf'],
       timestamp,
       log: () => {} // suppress unnecessary logging
     }))
-    .on('glyphs', (glyphs) => {
+    .on('glyphs', function(glyphs) {
       const options = {
-        className: 'icon',
-        fontName: fontName,
-        fontPath: '/fonts/', // set path to font (from your CSS file if relative)
-        glyphs: glyphs.map(mapGlyphs)
+        glyphs: glyphs.map(mapGlyphs),
+        fontName: fontName
       }
-      gulp.src(`templates/${ template }.css`)
+      gulp.src('android.xml')
         .pipe(consolidate('lodash', options))
-        .pipe(rename({ basename: fontName, extname:'_embed.scss' }))
-        .pipe(gulp.dest('../../ui/public/scss/')); // set path to export your CSS
+        .pipe(rename({ basename: fontName }))
+        .pipe(gulp.dest('dist/xml/')) // set path to export your xml
     })
-    .pipe(gulp.dest('../../ui/public/fonts/')); // set path to export your fonts
+    .pipe(gulp.dest('dist/fonts/')) // set path to export your fonts
 )
-
-gulp.task('watch', () => gulp.watch('*.sketch', ['symbols']))
 
 /**
  * This is needed for mapping glyphs and codepoints.
