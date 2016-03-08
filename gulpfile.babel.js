@@ -3,7 +3,8 @@ const
   rename = require('gulp-rename'),
   sketch = require('gulp-sketch'),
   iconfont = require('gulp-iconfont'),
-  consolidate = require('gulp-consolidate')
+  consolidate = require('gulp-consolidate'),
+  gutil = require('gulp-util')
 
 /**
  * Font settings
@@ -46,8 +47,10 @@ gulp.task('symbols', () =>
          .pipe(consolidate('lodash', options))
          .pipe(rename({ basename: fontName, extname:'_embed.scss' }))
          .pipe(gulp.dest('../../ui/public/scss/')) // set path to export your CSS
+         .on('end', function(){ gutil.log('Done exporting css!'); })
      })
     .pipe(gulp.dest('../../ui/public/fonts/')) // set path to export your fonts
+    .on('end', function(){ gutil.log('Done exporting fonts!'); })
 )
 
 gulp.task('watch', () => gulp.watch('*.sketch', ['symbols']))
