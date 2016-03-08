@@ -16,27 +16,12 @@ Just 3 steps! Enjoy making your original fonts ;-)
 ## Requirements
 
 - Mac
-- [Sketch 3](http://bohemiancoding.com/sketch) and [Sketch Tools](http://bohemiancoding.com/sketch/tool/)
 - [Node.js](http://nodejs.org/)
 - [gulp.js](http://gulpjs.com/)
+- [Sketch 3](http://bohemiancoding.com/sketch) and [Sketch Tools](http://bohemiancoding.com/sketch/tool/)
 
 
 ## Setup Tools
-
-### Sketch and Sketch Tools
-
-You haven't got Sketch yet? Visit [App Store](https://itunes.apple.com/jp/app/sketch-3/id852320343?l=en&mt=12). It's worth more than its price tag. Next, get the `sketchtool` to controll Sketch.app via CLI.
-
-0. Download [Sketch Tools](http://sketchtool.bohemiancoding.com/sketchtool-latest.zip).
-0. Unzip the archive.
-0. Open Terminal.
-0. Change the current directory to the unziped folder.
-0. Run the instll script and enter your password.
-
-```bash
-$ cd ~/Donwloads/scketchtool/
-$ sudo ./install.sh
-```
 
 ### Node.js and gulp.js
 
@@ -81,6 +66,13 @@ We use these plugin for gulp.js, FYI.
 - [gulp-iconfont](https://github.com/nfroidure/gulp-iconfont)
 
 
+### Sketch and Sketch Tools
+
+You haven't got Sketch yet? Visit [their site](http://sketchapp.com/). It's worth more than its price tag. Sketch bundles CLI tool, too. You can use `sketchtool` command to extract the data from `.sketch` files.
+
+Note: from ver 3.5, `sketchtool` has become an out-of-box feature. You don't have to install it seperately.
+
+
 ## Draw Icons
 
 It's time to draw your icons!
@@ -114,47 +106,23 @@ Then check the `dist` directory. There'll be the font and CSS files generated.
 
 ### Config
 
-If you want to change the name of your font, see the gulpfile.js and modify it.
+You can change the detail as you like. See the [gulpfile.js](gulpfile.js) and modify it.
+
+To change the name or style of your font, it would be enough just changing the part below:
 
 ```javascript
-var gulp = require("gulp");
-var rename = require("gulp-rename");
-var sketch = require("gulp-sketch");
-var iconfont = require('gulp-iconfont');
-var consolidate = require('gulp-consolidate');
-var gulpImagemin = require('gulp-imagemin'); // simplify the svg in case you run into troubles with transformed elements
-
-var fontName = 'symbols'; // set name of your symbol font
-var template = 'fontawesome-style'; // you can also choose 'foundation-style'
-
-gulp.task('symbols', function(){
-  gulp.src("symbol-font-14px.sketch") // you can also choose "symbol-font-16px.sketch"
-    .pipe(sketch({
-      export: 'artboards',
-      formats: 'svg'
-    }))
-    .pipe(gulpImagemin()) // pipe image-min before you pass it to the iconfont task
-    .pipe(iconfont({ fontName: fontName }))
-    .on('codepoints', function(codepoints) {
-      var options = {
-        glyphs: codepoints,
-        fontName: fontName,
-        fontPath: '../fonts/', // set path to font (from your CSS file if relative)
-        className: 's' // set class name in your CSS
-      };
-      gulp.src('templates/' + template + '.css')
-        .pipe(consolidate('lodash', options))
-        .pipe(rename({ basename:fontName }))
-        .pipe(gulp.dest('dist/css/')); // set path to export your CSS
-
-      // if you don't need sample.html, remove next 4 lines
-      gulp.src('templates/' + template + '.html')
-        .pipe(consolidate('lodash', options))
-        .pipe(rename({ basename:'sample' }))
-        .pipe(gulp.dest('dist/')); // set path to export your sample HTML
-    })
-    .pipe(gulp.dest('dist/fonts/')); // set path to export your fonts
-});
+/**
+ * Font settings
+ */
+const
+  // set name of your symbol font
+  fontName = 'symbols',
+  // set class name in your CSS
+  className = 's',
+  // you can also choose 'foundation-style'
+  template = 'fontawesome-style',
+  // you can also choose 'symbol-font-16px.sketch'
+  skethcFileName = 'symbol-font-14px.sketch'
 ```
 
 
@@ -181,6 +149,14 @@ You can choose CSS Style templates, and make your own with [lodash template](htt
 ```html
 <span class="s-your_icon"></span>
 ```
+
+
+## Variants
+
+### for Android Apps
+
+See [variants/android](variants/android) directory.
+
 
 ## Trouble Shooting
 
@@ -214,6 +190,9 @@ Conditions:
 
 Solution: Pipe [gulp-imagemin](https://github.com/sindresorhus/gulp-imagemin) before the iconfont task, which basically makes use of the [SVG Optimizer](https://github.com/svg/svgo) and collapses multiple transformations.
 
+
 ## History
 
+- 2.0.0: ES6, WOFF2, and adding variations (for Android app by @weitsai)
+- 1.2.0: Catch up versions, simplify the instruction
 - 1.1.0: Catch up to [gulp-iconfont v2](https://github.com/nfroidure/gulp-iconfont)([svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont))
