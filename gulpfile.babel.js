@@ -46,9 +46,9 @@ gulp.task('symbols', () =>
       gulp.src(`templates/${ template }.css`)
         .pipe(consolidate('lodash', options))
         .pipe(rename({ basename: fontName, extname:'_embed.scss' }))
-        .pipe(gulp.dest('../../ui/public/scss/')); // set path to export your CSS
+        .pipe(gulp.dest('../../ui/public/scss/')) // set path to export your CSS
     })
-    .pipe(gulp.dest('../../ui/public/fonts/')); // set path to export your fonts
+    .pipe(gulp.dest('../../ui/public/fonts/')) // set path to export your fonts
 )
 
 gulp.task('watch', () => gulp.watch('*.sketch', ['symbols']))
