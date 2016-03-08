@@ -23,7 +23,6 @@ const
  * See https://github.com/nfroidure/gulp-iconfont
  */
 const timestamp = Math.round(Date.now() / 1000)
-
 gulp.task('symbols', () =>
   gulp.src(skethcFileName)
     .pipe(sketch({
@@ -36,18 +35,6 @@ gulp.task('symbols', () =>
       timestamp,
       log: () => {} // suppress unnecessary logging
     }))
-    .on('glyphs', (glyphs) => {
-      const options = {
-        className: 'icon',
-        fontName: fontName,
-        fontPath: '/fonts/', // set path to font (from your CSS file if relative)
-        glyphs: glyphs.map(mapGlyphs)
-      }
-      gulp.src(`templates/${ template }.css`)
-        .pipe(consolidate('lodash', options))
-        .pipe(rename({ basename: fontName, extname:'_embed.scss' }))
-        .pipe(gulp.dest('../../ui/public/scss/')) // set path to export your CSS
-    })
     .pipe(gulp.dest('../../ui/public/fonts/')) // set path to export your fonts
 )
 
